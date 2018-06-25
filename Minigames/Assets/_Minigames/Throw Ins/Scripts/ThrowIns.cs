@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ThrowIn : MonoBehaviour {
+public class ThrowIns : MonoBehaviour {
 
 	[SerializeField] private Text randomNumberText;
 	[SerializeField] private Text[] answerTexts;
