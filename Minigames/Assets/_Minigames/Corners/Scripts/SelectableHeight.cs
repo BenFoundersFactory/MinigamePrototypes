@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SelectableHeight : MonoBehaviour {
 
-	private float counter = 0;
 	private Transform associatedTransform;
 	private CanvasGroup canvasGroup;
 
