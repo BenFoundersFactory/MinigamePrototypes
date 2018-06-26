@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class DialSegment : MonoBehaviour  {
 
+    [SerializeField] private Dial dial;
+
     [SerializeField] private int segmentID;
 
     private Image img;
@@ -14,7 +16,13 @@ public class DialSegment : MonoBehaviour  {
         img = GetComponent<Image>();
 	}
 
-	void OnMouseDown () {
-        Debug.Log("successful check!" + segmentID);
+	void OnMouseOver () {
+        if (Input.GetMouseButton(0)) {
+            dial.FillDial(segmentID);
+        }
     }
+
+	void OnMouseUp() {
+        dial.SendDialValue();
+	}
 }

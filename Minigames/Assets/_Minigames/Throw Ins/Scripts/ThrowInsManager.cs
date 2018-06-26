@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ThrowInsManager : MonoBehaviour {
 
+    public static ThrowInsManager instance;
+
     private const float FRIENDLY_MOVE_MIN = -6f;
     private const float FRIENDLY_MOVE_MAX = 1f;
 
@@ -32,6 +34,14 @@ public class ThrowInsManager : MonoBehaviour {
 
 	private bool throwingBall = false;
     private bool gameStarted = false;
+
+	void Awake() {
+        if (instance == null) {
+            instance = this;
+        } else {
+            Destroy (this.gameObject);
+        }
+	}
 
 	void Start () {
         calloutObject.SetActive(false);
@@ -133,6 +143,10 @@ public class ThrowInsManager : MonoBehaviour {
         StartCoroutine(StartThrowingCoroutine(answer));
 	}
 
+    public void InputDialAnswer(float answer) {
+        StartCoroutine(StartThrowingCoroutine(answer));
+    }
+
     private IEnumerator StartThrowingCoroutine(int answer) {
         for (int i = 0; i < answerBox.Length; i++) {
             if (i == answer) continue;
@@ -163,6 +177,17 @@ public class ThrowInsManager : MonoBehaviour {
         calloutObject.SetActive(false);
 
         if (correctAnswerBox == answer) Success();
+        else Fail();
+    }
+
+    private IEnumerator StartThrowingCoroutine(float answer) {
+        yield return Yielders.Get(0.5f);
+
+        throwingBall = true;
+
+        calloutObject.SetActive(false);
+
+        if (randomDecimal[selectedAnswer] == answer) Success();
         else Fail();
     }
 
