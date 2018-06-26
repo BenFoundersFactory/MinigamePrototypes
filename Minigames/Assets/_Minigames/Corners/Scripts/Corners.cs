@@ -165,12 +165,12 @@ public class Corners : MonoBehaviour {
 
 		while (true) {
 			float stepCam = 5.0f * Vector3.Distance(Camera.main.transform.position, endCameraPosition) * 0.01f;
-			float stepBall = 5.0f * Vector3.Distance(ball.transform.position, ballEndPoint) * 0.01f;
+			float stepBall = 5.0f * Vector3.Distance(ball.transform.position, ballEndPoint) * 0.02f;
 
 	    	Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, endCameraPosition, stepCam);
 	    	ball.transform.position = Vector3.MoveTowards(ball.transform.position, ballEndPoint, stepBall);
 
-	    	if (Vector3.Distance(ball.transform.position, ballEndPoint) <= 0.05f) {
+	    	if (Vector3.Distance(ball.transform.position, ballEndPoint) <= 0.2f) {
 	    		break;
 	    	}
 
@@ -183,15 +183,15 @@ public class Corners : MonoBehaviour {
 
 	private void KickBallIntoGoal() {
 		StartCoroutine(KickBallIntoGoalCoroutine());
-	}
+    }
 
 	private IEnumerator KickBallIntoGoalCoroutine() {
 		while (true) {
-			float step = 5.0f * Vector3.Distance(ball.transform.position, scoringPoint.position) * 0.01f;
+			float step = 5.0f * Vector3.Distance(ball.transform.position, scoringPoint.position) * 0.03f;
 
 	    	ball.transform.position = Vector3.MoveTowards(ball.transform.position, scoringPoint.position, step);
 
-	    	if (Vector3.Distance(ball.transform.position, scoringPoint.position) <= 0.05f) {
+	    	if (Vector3.Distance(ball.transform.position, scoringPoint.position) <= 0.4f) {
 	    		break;
 	    	}
 
@@ -205,11 +205,11 @@ public class Corners : MonoBehaviour {
 
 	private IEnumerator KickBallAwayFromGoalCoroutine() {
 		while (true) {
-			float step = 5.0f * Vector3.Distance(ball.transform.position, knockAwayPoint.position) * 0.01f;
+			float step = 5.0f * Vector3.Distance(ball.transform.position, knockAwayPoint.position) * 0.02f;
 
 	    	ball.transform.position = Vector3.MoveTowards(ball.transform.position, knockAwayPoint.position, step);
 
-	    	if (Vector3.Distance(ball.transform.position, knockAwayPoint.position) <= 0.05f) {
+	    	if (Vector3.Distance(ball.transform.position, knockAwayPoint.position) <= 0.4f) {
 	    		break;
 	    	}
 
