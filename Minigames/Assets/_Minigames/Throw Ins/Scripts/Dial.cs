@@ -15,10 +15,14 @@ public class Dial : MonoBehaviour {
 	}
 
 	public void FillDial(int segment) {
+        if (throwInsManager.throwingBall) return;
+
         dialFill.fillAmount = 0.05f + (segment * 0.05f);
     }
 
     public void SendDialValue() {
+        if (throwInsManager.throwingBall) return;
+
         throwInsManager.InputDialAnswer(dialFill.fillAmount);
     }
 }

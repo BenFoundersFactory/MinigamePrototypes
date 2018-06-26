@@ -12,6 +12,7 @@ public class ThrowInsManager : MonoBehaviour {
 
     [SerializeField] private GameObject calloutObject;
     [SerializeField] private GameObject[] answerBox;
+    [SerializeField] private GameObject dial;
 
 	[SerializeField] private Text randomNumberText;
 	[SerializeField] private Text[] answerTexts;
@@ -32,7 +33,7 @@ public class ThrowInsManager : MonoBehaviour {
 	[SerializeField] private GameObject friendly;
 	[SerializeField] private GameObject opponent;
 
-	private bool throwingBall = false;
+	public bool throwingBall = false;
     private bool gameStarted = false;
 
 	void Awake() {
@@ -44,6 +45,7 @@ public class ThrowInsManager : MonoBehaviour {
 	}
 
 	void Start () {
+        dial.SetActive(false);
         calloutObject.SetActive(false);
         for (int i = 0; i < answerBox.Length; i++) {
             answerBox[i].SetActive(false);
@@ -86,6 +88,7 @@ public class ThrowInsManager : MonoBehaviour {
     private IEnumerator StartGameCoroutine() {
         yield return Yielders.Get(1f);
 
+        dial.SetActive(true);
         calloutObject.SetActive(true);
 
         yield return Yielders.Get(0.5f);
@@ -185,6 +188,7 @@ public class ThrowInsManager : MonoBehaviour {
 
         throwingBall = true;
 
+        dial.SetActive(false);
         calloutObject.SetActive(false);
 
         if (randomDecimal[selectedAnswer] == answer) Success();

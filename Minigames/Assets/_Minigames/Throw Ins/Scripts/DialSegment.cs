@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class DialSegment : MonoBehaviour  {
+public class DialSegment : MonoBehaviour {
 
     [SerializeField] private Dial dial;
 
@@ -12,17 +12,18 @@ public class DialSegment : MonoBehaviour  {
 
     private Image img;
 
-	void Awake() {
+    void Awake() {
         img = GetComponent<Image>();
-	}
+    }
 
-	void OnMouseOver () {
+    void OnMouseOver() {
         if (Input.GetMouseButton(0)) {
             dial.FillDial(segmentID);
         }
     }
 
-	void OnMouseUp() {
+    void OnMouseUp() {
         dial.SendDialValue();
-	}
+    }
+
 }
