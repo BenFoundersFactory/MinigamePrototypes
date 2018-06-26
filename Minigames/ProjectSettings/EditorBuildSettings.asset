@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+    path: 
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/MainGame.unity
+    guid: 85d20633f03f342c3a23bcdf375c44c4
+  - enabled: 1
+    path: Assets/_Minigames/Throw Ins/ThrowIns.unity
+    guid: 8cf03180a63e943eeb29366e3a9cecae
+  - enabled: 1
+    path: Assets/_Minigames/Corners/Corners.unity
+    guid: 0b939a27a8ec746b69dda02ecc904127
   m_configObjects: {}

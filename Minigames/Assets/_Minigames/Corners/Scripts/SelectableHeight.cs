@@ -7,13 +7,16 @@ public class SelectableHeight : MonoBehaviour {
 	private Transform associatedTransform;
 	private CanvasGroup canvasGroup;
 
+    [SerializeField] private int answer;
+
 	void Awake () {
 		associatedTransform = GetComponent<Transform>();
 		canvasGroup = GetComponent<CanvasGroup>();
 	}
 	
-	public void PlaySelectAnimation() {
-		StartCoroutine(PlaySelectAnimationCoroutine());
+	public void PlaySelectAnimation(int answer) {
+        if (this.answer != answer) this.gameObject.SetActive(false);
+		else StartCoroutine(PlaySelectAnimationCoroutine());
 	}
 
 	private IEnumerator PlaySelectAnimationCoroutine() {

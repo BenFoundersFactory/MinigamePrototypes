@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Corners : MonoBehaviour {
+public class CornersManager : MonoBehaviour {
 
 	[SerializeField] private Vector3 startCameraPosition;
 	[SerializeField] private Vector3 endCameraPosition;
-	[SerializeField] private GameObject selectionCanvas;
 
 	[SerializeField] private Text[] heightText;
 	private float[] heightAmount;
@@ -34,8 +33,19 @@ public class Corners : MonoBehaviour {
 
 	private Vector3 ballEndPoint;
 
+    [SerializeField] private Image visualTimer;
+
 	void Start () {
 		InitialiseValues();
+
+        for (int i = 0; i < selectableHeight.Length; i++) {
+            selectableHeight[i].gameObject.SetActive(false);
+            opponentHeights[i].gameObject.SetActive(false);
+        }
+
+        visualTimer.gameObject.SetActive(false);
+
+        counter = timer;
 	}
 	
 	void Update () {
@@ -45,18 +55,28 @@ public class Corners : MonoBehaviour {
         	
         	if (Vector3.Distance(Camera.main.transform.position, endCameraPosition) <= 0.05f) {
         		gameStarted = true;
-        		selectionCanvas.SetActive(true);
+
+                for (int i = 0; i < selectableHeight.Length; i++) {
+                    selectableHeight[i].gameObject.SetActive(true);
+                    opponentHeights[i].gameObject.SetActive(true);
+                }
+
+                visualTimer.gameObject.SetActive(true);
         	}
 
         	return;
         }
 
-		counter += Time.deltaTime;
+        if (!takenCorner) {
+            counter -= Time.deltaTime;
+            visualTimer.fillAmount = counter / timer;
 
-		if (counter >= timer && !takenCorner) {
-			Debug.Log("TOOK TOO LONG!");
-			Failure();
-		}
+            if (counter <= 0f) {
+                Debug.Log("TOOK TOO LONG!");
+                OutOfTime();
+                Failure();
+            }
+        }
 	}
 
 	private void InitialiseValues() {
@@ -84,35 +104,32 @@ public class Corners : MonoBehaviour {
 
 	}
 
-	public void SelectPairOne() {
-		if (takenCorner) return;
+    public void SelectAnswer(int answer) {
+        if (takenCorner) return;
 
-		ballEndPoint = new Vector3(passingPoint[0].position.x,
-								   passingPoint[0].position.y + 2.5f,
-								   passingPoint[0].position.z);
+        visualTimer.gameObject.SetActive(false);
 
-		selectableHeight[0].PlaySelectAnimation();
-		selectableHeight[1].gameObject.SetActive(false);
-		HideUI();
+        ballEndPoint = new Vector3(passingPoint[answer].position.x,
+                                   passingPoint[answer].position.y + 2.5f,
+                                   passingPoint[answer].position.z);
 
-		if (winningPair == 0) Success();
-		else Failure();
-	}
+        selectableHeight[0].PlaySelectAnimation(answer);
+        selectableHeight[1].PlaySelectAnimation(answer);
+        HideUI();
 
-	public void SelectPairTwo() {
-		if (takenCorner) return;
+        if (winningPair == answer) Success();
+        else Failure();
+    }
 
-		ballEndPoint = new Vector3(passingPoint[1].position.x,
-								   passingPoint[1].position.y + 2.5f,
-								   passingPoint[1].position.z);
+    private void OutOfTime() {
+        ballEndPoint = new Vector3(passingPoint[0].position.x,
+                                   passingPoint[0].position.y + 2.5f,
+                                   passingPoint[0].position.z);
 
-		selectableHeight[1].PlaySelectAnimation();
-		selectableHeight[0].gameObject.SetActive(false);
-		HideUI();
-
-		if (winningPair == 1) Success();
-		else Failure();
-	}
+        selectableHeight[0].PlaySelectAnimation(2);
+        selectableHeight[1].PlaySelectAnimation(2);
+        HideUI();
+    }
 
 	private void HideUI() {
 		for (int i = 0; i < opponentHeights.Length; i++) {
@@ -165,12 +182,12 @@ public class Corners : MonoBehaviour {
 
 		while (true) {
 			float stepCam = 5.0f * Vector3.Distance(Camera.main.transform.position, endCameraPosition) * 0.01f;
-			float stepBall = 5.0f * Vector3.Distance(ball.transform.position, ballEndPoint) * 0.02f;
+            float stepBall = Mathf.Min(5.0f * Vector3.Distance(ball.transform.position, ballEndPoint) * 0.02f, 2f);
 
 	    	Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, endCameraPosition, stepCam);
 	    	ball.transform.position = Vector3.MoveTowards(ball.transform.position, ballEndPoint, stepBall);
 
-	    	if (Vector3.Distance(ball.transform.position, ballEndPoint) <= 0.2f) {
+	    	if (Vector3.Distance(ball.transform.position, ballEndPoint) <= 1f) {
 	    		break;
 	    	}
 
