@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
     private bool playingGame = false;
 
     [SerializeField] private GameObject timeAndScoreCanvas;
+    [SerializeField] private GameObject mainMenuCanvas;
     [SerializeField] private Text scoreText;
     [SerializeField] private Text timeText;
 
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour {
         if (name != "ScoreScreen") {
             playingGame = true;
             timeAndScoreCanvas.SetActive(true);
+            mainMenuCanvas.SetActive(false);
         }
         SceneManager.LoadScene(name);
     }
@@ -74,6 +76,7 @@ public class GameManager : MonoBehaviour {
         score = 0;
         playingGame = false;
         timeAndScoreCanvas.SetActive(false);
+        mainMenuCanvas.SetActive(true);
         SceneManager.LoadScene("MainGame");
     }
 
