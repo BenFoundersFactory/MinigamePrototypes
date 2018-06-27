@@ -31,21 +31,17 @@ public class CornersManager : MonoBehaviour {
 	[SerializeField] private Transform knockAwayPoint;
 	[SerializeField] private Transform[] passingPoint;
 
+    private Vector3 ballStartPos;
+
 	private Vector3 ballEndPoint;
 
     [SerializeField] private Image visualTimer;
 
 	void Start () {
-		InitialiseValues();
+        ballStartPos = ball.transform.position;
 
-        for (int i = 0; i < selectableHeight.Length; i++) {
-            selectableHeight[i].gameObject.SetActive(false);
-            opponentHeights[i].gameObject.SetActive(false);
-        }
-
-        visualTimer.gameObject.SetActive(false);
-
-        counter = timer;
+        InitialiseValues();
+        InitialSetup();
 	}
 	
 	void Update () {
@@ -104,6 +100,23 @@ public class CornersManager : MonoBehaviour {
 
 	}
 
+    private void InitialSetup() {
+        ball.transform.position = ballStartPos;
+
+        takenCorner = false;
+        gameStarted = false;
+        scoredGoal = false;
+
+        for (int i = 0; i < selectableHeight.Length; i++) {
+            selectableHeight[i].gameObject.SetActive(false);
+            opponentHeights[i].gameObject.SetActive(false);
+        }
+
+        visualTimer.gameObject.SetActive(false);
+
+        counter = timer;
+    }
+
     public void SelectAnswer(int answer) {
         if (takenCorner) return;
 
@@ -140,6 +153,7 @@ public class CornersManager : MonoBehaviour {
 	private void Success() {
 		scoredGoal = true;
 		takenCorner = true;
+        GameManager.instance.score++;
 		Debug.Log("SCORED A GOAL!");
 		MoveCameraToBall();
 	}
@@ -214,6 +228,8 @@ public class CornersManager : MonoBehaviour {
 
 	    	yield return Yielders.Get(0.01f);
 		}
+
+        RestartGame();
 	}
 
 	private void KickBallAwayFromGoal() {
@@ -232,5 +248,30 @@ public class CornersManager : MonoBehaviour {
 
 	    	yield return Yielders.Get(0.01f);
 		}
+
+        RestartGame();
 	}
+
+    private void RestartGame() {
+        StartCoroutine(RestartGameCoroutine());
+    }
+
+    private IEnumerator RestartGameCoroutine() {
+        yield return Yielders.Get(1f);
+
+        while (true) {
+            float step = 5.0f * Vector3.Distance(Camera.main.transform.position, startCameraPosition) * 0.01f;
+
+            Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, startCameraPosition, Mathf.Min(step, 1f));
+
+            if (Vector3.Distance(Camera.main.transform.position, startCameraPosition) <= 0.05f) {
+                break;
+            }
+
+            yield return Yielders.Get(0.01f);
+        }
+
+        InitialiseValues();
+        InitialSetup();
+    }
 }

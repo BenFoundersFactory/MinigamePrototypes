@@ -25,4 +25,8 @@ public class Dial : MonoBehaviour {
 
         throwInsManager.InputDialAnswer(dialFill.fillAmount);
     }
+
+    public void ResetDial() {
+        dialFill.fillAmount = 0f;
+    }
 }

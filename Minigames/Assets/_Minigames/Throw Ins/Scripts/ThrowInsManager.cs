@@ -33,6 +33,9 @@ public class ThrowInsManager : MonoBehaviour {
 	[SerializeField] private GameObject friendly;
 	[SerializeField] private GameObject opponent;
 
+    private Vector3 ballStartPos;
+    private Vector3 opponentStartPos;
+
 	public bool throwingBall = false;
     private bool gameStarted = false;
 
@@ -45,33 +48,15 @@ public class ThrowInsManager : MonoBehaviour {
 	}
 
 	void Start () {
-        dial.SetActive(false);
-        calloutObject.SetActive(false);
-        for (int i = 0; i < answerBox.Length; i++) {
-            answerBox[i].SetActive(false);
-        }
+        ballStartPos = ball.transform.position;
+        opponentStartPos = opponent.transform.position;
 
 		InitialiseValues();
 
-		selectedAnswer = Random.Range(0, randomDecimal.Count);
-		calloutType = Random.Range(0, 3);
+        InitialSetup();
 
-		switch (calloutType) {
-			case 0:
-				randomNumberText.text = randomPercentage[selectedAnswer].ToString() + "%";
-				break;
-			case 1:
-				randomNumberText.text = randomFraction[selectedAnswer].x.ToString() + "/" + randomFraction[selectedAnswer].y.ToString();
-				break;
-			case 2:
-				randomNumberText.text = randomDecimal[selectedAnswer].ToString("0.00");
-				break;
-			default:
-				break;
-		}
-
-		SetAnswers();
-
+        SetCallout();
+		SetButtonAnswers();
         StartGame();
 	}
 
@@ -88,6 +73,7 @@ public class ThrowInsManager : MonoBehaviour {
     private IEnumerator StartGameCoroutine() {
         yield return Yielders.Get(1f);
 
+        dial.GetComponent<Dial>().ResetDial(); 
         dial.SetActive(true);
         calloutObject.SetActive(true);
 
@@ -100,6 +86,39 @@ public class ThrowInsManager : MonoBehaviour {
         gameStarted = true;
     }
 
+    private void InitialSetup() {
+        ball.transform.position = ballStartPos;
+        opponent.transform.position = opponentStartPos;
+
+        dial.SetActive(false);
+        calloutObject.SetActive(false);
+        for (int i = 0; i < answerBox.Length; i++) {
+            answerBox[i].SetActive(false);
+        }
+
+        throwingBall = false;
+        gameStarted = false;
+    }
+
+    private void SetCallout() {
+        selectedAnswer = Random.Range(0, randomDecimal.Count);
+        calloutType = Random.Range(0, 3);
+
+        switch (calloutType) {
+            case 0:
+                randomNumberText.text = randomPercentage[selectedAnswer].ToString() + "%";
+                break;
+            case 1:
+                randomNumberText.text = randomFraction[selectedAnswer].x.ToString() + "/" + randomFraction[selectedAnswer].y.ToString();
+                break;
+            case 2:
+                randomNumberText.text = randomDecimal[selectedAnswer].ToString("0.00");
+                break;
+            default:
+                break;
+        }
+    }
+
 	private void InitialiseValues() {
 		for (int i = 1; i < 20; i++) {
 			randomPercentage.Add(5 * i);
@@ -108,7 +127,7 @@ public class ThrowInsManager : MonoBehaviour {
 		}
 	}
 
-	private void SetAnswers() {
+	private void SetButtonAnswers() {
         HashSet<int> answerSet = new HashSet<int>();
 
         answerSet.Add(selectedAnswer);
@@ -196,6 +215,7 @@ public class ThrowInsManager : MonoBehaviour {
     }
 
 	private void Success() {
+        GameManager.instance.score++;
 		Debug.Log("SUCCESSFUL THROW IN!");
 
         Vector3 targetPos = new Vector3(Mathf.Lerp(FRIENDLY_MOVE_MIN, FRIENDLY_MOVE_MAX, randomPercentage[selectedAnswer]),
@@ -265,5 +285,20 @@ public class ThrowInsManager : MonoBehaviour {
 
             yield return Yielders.Get(0.01f);
         }
+
+        RestartGame();
+    }
+
+    private void RestartGame() {
+        StartCoroutine(RestartGameCoroutine());
+    }
+
+    private IEnumerator RestartGameCoroutine() {
+        yield return Yielders.Get(1f);
+
+        InitialSetup();
+        SetCallout();
+        SetButtonAnswers();
+        StartGame();
     }
 }

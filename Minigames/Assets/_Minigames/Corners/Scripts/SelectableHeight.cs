@@ -9,11 +9,17 @@ public class SelectableHeight : MonoBehaviour {
 
     [SerializeField] private int answer;
 
+    private Vector3 startScale;
+
 	void Awake () {
 		associatedTransform = GetComponent<Transform>();
 		canvasGroup = GetComponent<CanvasGroup>();
 	}
-	
+
+	void Start() {
+        startScale = associatedTransform.localScale;
+	}
+
 	public void PlaySelectAnimation(int answer) {
         if (this.answer != answer) this.gameObject.SetActive(false);
 		else StartCoroutine(PlaySelectAnimationCoroutine());
@@ -34,5 +40,8 @@ public class SelectableHeight : MonoBehaviour {
 
 			yield return Yielders.Get(0.01f);
 		}
+
+        associatedTransform.localScale = startScale;
+        canvasGroup.alpha = 1f;
 	}
 }
