@@ -29,7 +29,6 @@ public class CircleBlockManager : MonoBehaviour {
     [SerializeField] private GameObject bonusCoin;
 
     // Swipe controls
-    private Vector3 swipeStartPosition;
     private bool swipeStarted;
     private float speedX = 0f;
 
@@ -76,7 +75,6 @@ public class CircleBlockManager : MonoBehaviour {
             Touch touch = Input.GetTouch(i);
 
             if (!swipeStarted && touch.phase == TouchPhase.Began) {
-                swipeStartPosition = touch.position;
                 swipeStarted = true;
             }
 

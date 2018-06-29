@@ -10,12 +10,6 @@ public class DialSegment : MonoBehaviour {
 
     [SerializeField] private int segmentID;
 
-    private Image img;
-
-    void Awake() {
-        img = GetComponent<Image>();
-    }
-
     void OnMouseOver() {
         if (Input.GetMouseButton(0)) {
             dial.FillDial(segmentID);
