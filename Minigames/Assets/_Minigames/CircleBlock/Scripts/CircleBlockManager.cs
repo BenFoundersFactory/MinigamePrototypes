@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CircleBlockManager : MonoBehaviour {
 
     private float playerRotationSpeed = 70f;
+    private float playerSwipeRotationSpeed = 0.3f;
 
     [SerializeField] private GameObject opponent;
     [SerializeField] private GameObject ball;
@@ -27,15 +28,20 @@ public class CircleBlockManager : MonoBehaviour {
 
     [SerializeField] private GameObject bonusCoin;
 
-	void Start () {
+    // Swipe controls
+    private Vector3 swipeStartPosition;
+    private bool swipeStarted;
+    private float speedX = 0f;
+
+    void Start() {
         player.transform.eulerAngles = new Vector3(0, 180f, 0);
 
         InitialSetup();
 
         StartGame();
-	}
-	
-	void Update () {
+    }
+
+    void Update() {
         if (gameStarted) {
             counter -= Time.deltaTime;
             visualTimer.fillAmount = counter / timer;
@@ -46,17 +52,50 @@ public class CircleBlockManager : MonoBehaviour {
                 RotateOpponent();
             }
         }
-	}
+    }
 
-	void FixedUpdate() {
+    void FixedUpdate() {
         if (!ballShot) {
+#if (UNITY_ANDROID || UNITY_IOS)
+            SwipeControls();
+#endif
+
+#if (UNITY_EDITOR)
             if (Input.GetMouseButton(0)) {
                 if (Input.GetAxis("Mouse X") > 0 || Input.GetAxis("Mouse X") < 0) {
                     player.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * playerRotationSpeed);
                 }
             }
+#endif
         }
 	}
+
+    private void SwipeControls() {
+        for (int i = 0; i < Input.touchCount; i++) {
+
+            Touch touch = Input.GetTouch(i);
+
+            if (!swipeStarted && touch.phase == TouchPhase.Began) {
+                swipeStartPosition = touch.position;
+                swipeStarted = true;
+            }
+
+            if (touch.phase == TouchPhase.Moved && swipeStarted) {
+                if (touch.deltaPosition.x * speedX < 0) speedX = 0;
+
+                speedX = touch.deltaPosition.x;
+            }
+
+            if (swipeStarted) {
+                if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) {
+                    speedX = 0f;
+                    swipeStarted = false;
+                }
+            }
+        }
+
+        player.transform.Rotate(Vector3.up * speedX * playerSwipeRotationSpeed);
+    }
 
 	private void StartGame() {
         StartCoroutine(StartGameCoroutine());
@@ -77,7 +116,8 @@ public class CircleBlockManager : MonoBehaviour {
 
     private void InitialSetup() {
         ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        ball.transform.position = opponent.transform.position + (opponent.transform.forward * 0.7f);
+        ball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        ball.transform.position = opponent.transform.position + (opponent.transform.forward * 0.8f);
         bonusCoin.transform.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
         bonusCoin.transform.GetChild(0).gameObject.SetActive(true);
         player.transform.GetChild(0).GetComponent<CapsuleCollider>().enabled = true;
@@ -88,6 +128,9 @@ public class CircleBlockManager : MonoBehaviour {
         counter = timer;
         gameStarted = false;
         ballShot = false;
+
+        swipeStarted = false;
+        speedX = 0f;
     }
 
     private void GetRandomCall() {
@@ -132,7 +175,8 @@ public class CircleBlockManager : MonoBehaviour {
     private void CheckSuccess() {
         ball.GetComponent<Rigidbody>().AddForce(opponent.transform.forward * 30f, ForceMode.Impulse);
 
-        if (player.transform.eulerAngles.y == opponent.transform.eulerAngles.y) Success();
+        Debug.Log(player.transform.eulerAngles.y + " " + opponent.transform.eulerAngles.y);
+        if (Mathf.Approximately(player.transform.eulerAngles.y, opponent.transform.eulerAngles.y)) Success();
         else Failure();
 
         RestartGame();
