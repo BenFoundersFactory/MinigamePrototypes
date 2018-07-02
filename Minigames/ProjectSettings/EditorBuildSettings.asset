@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Minigames/TheRightCrowd/TheRightCrowd.unity
     guid: ff378a1edd3fa414d91c19ef4f03d2c6
+  - enabled: 1
+    path: Assets/_Minigames/GridBlock/GridBlock.unity
+    guid: 2007c6abfb35e4ebd979eaece5526f47
   m_configObjects: {}

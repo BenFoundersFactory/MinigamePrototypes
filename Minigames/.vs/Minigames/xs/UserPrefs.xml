@@ -1,9 +1,14 @@
 ﻿<Properties StartupConfiguration="{21E0681C-65DD-533F-4383-7B2A3AF32114}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Minigames/TheRightCrowd/Scripts/TheRightCrowdManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Minigames/GridBlock/Scripts/GridBlockManager.cs">
     <Files>
-      <File FileName="Assets/_Minigames/TheRightCrowd/Scripts/TheRightCrowdManager.cs" Line="9" Column="48" />
-      <File FileName="Assets/_Minigames/TheRightCrowd/Scripts/Seat.cs" Line="23" Column="41" />
+      <File FileName="Assets/_Minigames/TheRightCrowd/Scripts/TheRightCrowdManager.cs" Line="67" Column="17" />
+      <File FileName="Assets/_Minigames/TheRightCrowd/Scripts/Seat.cs" Line="16" Column="26" />
+      <File FileName="Assets/_Minigames/GoalKicks/Scripts/GoalKickPoint.cs" Line="18" Column="9" />
+      <File FileName="Assets/_Minigames/GridBlock/Scripts/GridBlockPoint.cs" Line="11" Column="34" />
+      <File FileName="Assets/_Minigames/GridBlock/Scripts/GridBlockManager.cs" Line="73" Column="71" />
+      <File FileName="Assets/_Minigames/GoalKicks/Scripts/GoalKicksManager.cs" Line="145" Column="5" />
+      <File FileName="Assets/_Minigames/CircleSmash/Scripts/CircleSmashManager.cs" Line="175" Column="9" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
