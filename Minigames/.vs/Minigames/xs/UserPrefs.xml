@@ -1,12 +1,11 @@
 ﻿<Properties StartupConfiguration="{21E0681C-65DD-533F-4383-7B2A3AF32114}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Minigames/GoalKicks/Scripts/GoalKicksManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Minigames/CircleBlock/Scripts/CircleBlockManager.cs">
     <Files>
-      <File FileName="Assets/_Minigames/GoalKicks/Scripts/GoalKickPoint.cs" Line="18" Column="52" />
-      <File FileName="Assets/_Minigames/GoalKicks/Scripts/GoalKicksManager.cs" Line="106" Column="34" />
-      <File FileName="Assets/_Minigames/ThrowIns/Scripts/DialSegment.cs" Line="13" Column="5" />
+      <File FileName="Assets/_Minigames/CircleSmash/Scripts/CircleSmashManager.cs" Line="76" Column="9" />
+      <File FileName="Assets/_Minigames/CircleSmash/Scripts/CircleSmashCube.cs" Line="12" Column="22" />
+      <File FileName="Assets/_Minigames/GoalKicks/Scripts/GoalKicksManager.cs" Line="118" Column="38" />
       <File FileName="Assets/_Minigames/CircleBlock/Scripts/CircleBlockManager.cs" Line="31" Column="22" />
-      <File FileName="Assets/_Scripts/MathsUtil.cs" Line="21" Column="45" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

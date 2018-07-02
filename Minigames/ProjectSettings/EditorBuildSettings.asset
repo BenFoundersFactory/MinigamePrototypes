@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Minigames/GoalKicks/GoalKicks.unity
     guid: 9b93929560bd44ea499ee693742689f8
+  - enabled: 1
+    path: Assets/_Minigames/CircleSmash/CircleSmash.unity
+    guid: 054a573b06a344aa4b177eb4d76b3200
   m_configObjects: {}

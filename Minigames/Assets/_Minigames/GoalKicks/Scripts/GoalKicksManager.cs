@@ -30,6 +30,8 @@ public class GoalKicksManager : MonoBehaviour {
     [SerializeField] private GameObject friendly;
     [SerializeField] private GameObject opponent;
 
+    private bool ballKicked;
+
 	void Awake() {
         if (instance == null) {
             instance = this;
@@ -114,6 +116,10 @@ public class GoalKicksManager : MonoBehaviour {
     }
 
     public void CheckSuccess(GoalKickPoint p) {
+        if (ballKicked) return;
+
+        ballKicked = true;
+
         Vector3 pos = new Vector3(p.gameObject.transform.position.x, ball.transform.position.y, p.gameObject.transform.position.z);
 
         if (p.id == chosenPoint.id) Success(pos);
@@ -121,25 +127,26 @@ public class GoalKicksManager : MonoBehaviour {
     }
 
     private void Success(Vector3 pos) {
-        KickBallToPoint(pos);
+        KickBallToPoint(pos, true);
         GameManager.instance.score++;
         Debug.Log("Success!");
     }
 
     private void Failure(Vector3 pos) {
-        KickBallToPoint(pos);
+        KickBallToPoint(pos, false);
         Debug.Log("OOPS!");
     }
 
     private void RestartGame() {
+        ballKicked = false;
         StartGame();
     }
 
-    private void KickBallToPoint(Vector3 pos) {
-        StartCoroutine(KickBallToPointCoroutine(pos));
+    private void KickBallToPoint(Vector3 pos, bool success) {
+        StartCoroutine(KickBallToPointCoroutine(pos, success));
     }
 
-    private IEnumerator KickBallToPointCoroutine(Vector3 pos) {
+    private IEnumerator KickBallToPointCoroutine(Vector3 pos, bool success) {
         yield return Yielders.Get(0.5f);
 
         float speed = 2f;
@@ -151,6 +158,8 @@ public class GoalKicksManager : MonoBehaviour {
             counter += time / 100f;
 
             ballTransform.position = MathsUtil.GetBezierPosition(ballTransform.position, pos, counter, 2.5f);
+            if (success) friendly.transform.position = Vector3.Lerp(friendly.transform.position, pos, counter);
+            else opponent.transform.position = Vector3.Lerp(opponent.transform.position, pos, counter);
 
             if (counter >= 1f) break;
 
