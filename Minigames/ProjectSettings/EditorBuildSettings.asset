@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Minigames/GridBlock/GridBlock.unity
     guid: 2007c6abfb35e4ebd979eaece5526f47
+  - enabled: 1
+    path: Assets/_Minigames/MakeItRain/MakeItRain.unity
+    guid: fce966f3f5ea047d2bb0b85c01df88e1
   m_configObjects: {}
