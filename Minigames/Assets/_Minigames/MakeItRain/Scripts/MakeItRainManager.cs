@@ -5,13 +5,15 @@ using UnityEngine.UI;
 
 public class MakeItRainManager : MonoBehaviour {
 
-    public static MakeItRainManager instance;
+    private int DIFFICULTY_SCALE = 4;
 
     private const int MAX_WAGE = 100000;
-    private const float WAGE_MULTIPLES = 0.05f;
+    private float WAGE_MULTIPLES = 0.05f;
 
     private const float MAX_BONUS = 1;
-    private const float BONUS_MULTIPLES = 0.1f;
+    private float BONUS_MULTIPLES = 0.1f;
+
+    public static MakeItRainManager instance;
 
     [SerializeField] private Text wageText;
     [SerializeField] private Text bonusText;
@@ -28,6 +30,11 @@ public class MakeItRainManager : MonoBehaviour {
     private float counter = 0f;
     [SerializeField] private Image visualTimer;
 
+    [SerializeField] private Text totaliserAnswer;
+    [SerializeField] private Slider totaliser;
+
+    [SerializeField] private Text difficultyText;
+
     public bool gameStarted = false;
 
     void Awake() {
@@ -39,6 +46,10 @@ public class MakeItRainManager : MonoBehaviour {
 	}
 
 	void Start () {
+        difficultyText.text = "Difficulty: " + DIFFICULTY_SCALE.ToString();
+
+        SetDifficultyScale();
+
         InitialSetup();
 
         StartGame();
@@ -53,17 +64,43 @@ public class MakeItRainManager : MonoBehaviour {
         if (counter <= 0f) EndGame();
 	}
 
+    private void SetDifficultyScale() {
+        switch (DIFFICULTY_SCALE) {
+            case 1:
+                WAGE_MULTIPLES = 0.2f;
+                BONUS_MULTIPLES = 0.2f;
+                break;
+            case 2:
+                WAGE_MULTIPLES = 0.1f;
+                BONUS_MULTIPLES = 0.1f;
+                break;
+            case 3:
+                WAGE_MULTIPLES = 0.05f;
+                BONUS_MULTIPLES = 0.05f;
+                break;
+            case 4:
+                WAGE_MULTIPLES = 0.01f;
+                BONUS_MULTIPLES = 0.01f;
+                break;
+            default:
+                WAGE_MULTIPLES = 0.01f;
+                BONUS_MULTIPLES = 0.01f;
+                break;
+        }
+    }
+
     private void InitialSetup() {
         gameStarted = false;
         counter = timer;
         moneyCountText.text = "£0";
         resultText.text = "";
+        totaliserAnswer.text = "???";
         moneyCount = 0;
 
-        wage = (int) (MAX_WAGE * WAGE_MULTIPLES * Random.Range(1, (int)(1 / WAGE_MULTIPLES + 1)));
-        bonus = MAX_BONUS * BONUS_MULTIPLES * Random.Range(1, (int) (0.5 / BONUS_MULTIPLES + 1));
+        wage = (int) Mathf.Ceil((MAX_WAGE * (WAGE_MULTIPLES * Random.Range(1, (int)(1 / WAGE_MULTIPLES + 1)))));
+        bonus = MAX_BONUS * (BONUS_MULTIPLES * Random.Range(1, (int) (1 / BONUS_MULTIPLES + 1)));
 
-        answer = (int) (wage * bonus);
+        answer = (int) Mathf.Ceil(wage * bonus);
 
         wageText.text = "Wage: ???";
         bonusText.text = "Bonus: ???";
@@ -79,11 +116,13 @@ public class MakeItRainManager : MonoBehaviour {
         gameStarted = true;
         wageText.text = "Wage: " + "£" + wage.ToString();
         bonusText.text = "Bonus: " + (bonus * 100).ToString() + "%";
+        totaliserAnswer.text = "£" + answer.ToString();
     }
 
     public void AddAmount(int amount) {
         moneyCount += amount;
         moneyCountText.text = "£" + moneyCount.ToString();
+        totaliser.value = (float) (moneyCount) / answer;
 
         if (moneyCount >= answer) EndGame();
     }
@@ -107,7 +146,18 @@ public class MakeItRainManager : MonoBehaviour {
     private IEnumerator RestartGameCoroutine() {
         yield return Yielders.Get(1f);
 
+        SetDifficultyScale();
         InitialSetup();
         StartGame();
+    }
+
+    public void SetDifficulty() {
+        DIFFICULTY_SCALE++;
+
+        if (DIFFICULTY_SCALE > 4) {
+            DIFFICULTY_SCALE = 1;
+        }
+
+        difficultyText.text = "Difficulty: " + DIFFICULTY_SCALE.ToString();
     }
 }
