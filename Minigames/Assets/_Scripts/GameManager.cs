@@ -43,6 +43,10 @@ public class GameManager : MonoBehaviour {
 	void Update() {
         if (!playingGame) return;
 
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Finish();
+        }
+
         timer -= Time.deltaTime;
 
         if (timer <= 0f) {
@@ -79,6 +83,4 @@ public class GameManager : MonoBehaviour {
         mainMenuCanvas.SetActive(true);
         SceneManager.LoadScene("MainGame");
     }
-
-
 }
