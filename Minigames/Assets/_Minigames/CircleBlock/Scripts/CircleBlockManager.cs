@@ -5,8 +5,12 @@ using UnityEngine.UI;
 
 public class CircleBlockManager : MonoBehaviour {
 
-    private float playerRotationSpeed = 70f;
-    private float playerSwipeRotationSpeed = 0.3f;
+    public static CircleBlockManager instance;
+
+    private int DIFFICULTY_SCALE = 0;
+
+    private int CALLOUT_INCREMENT = 5;
+    public float PROTRACTOR_FILL = 1f;
 
     [SerializeField] private GameObject opponent;
     [SerializeField] private GameObject ball;
@@ -24,16 +28,30 @@ public class CircleBlockManager : MonoBehaviour {
     private int clockwise;
 
     private bool gameStarted;
-    private bool ballShot;
+    public bool ballShot;
 
     [SerializeField] private GameObject bonusCoin;
+    [SerializeField] private Image protractor;
+
+    [SerializeField] private Transform ballReceiver;
 
     // Swipe controls
-    private bool swipeStarted;
-    private float speedX = 0f;
+    //private bool swipeStarted;
+    //private float speedX = 0f;
+    //private float playerSwipeRotationSpeed = 0.3f;
 
-    void Start() {
-        player.transform.eulerAngles = new Vector3(0, 180f, 0);
+	void Awake() {
+        if (instance == null) {
+            instance = this;
+        } else {
+            Destroy(gameObject);
+        }
+	}
+
+	void Start() {
+        SetDifficultyScale();
+
+        player.transform.eulerAngles = new Vector3(0, Random.Range(0, 360 * CircleBlockManager.instance.PROTRACTOR_FILL), 0);
 
         InitialSetup();
 
@@ -53,28 +71,14 @@ public class CircleBlockManager : MonoBehaviour {
         }
     }
 
-    void FixedUpdate() {
-        if (!ballShot) {
-#if (UNITY_ANDROID || UNITY_IOS)
-            SwipeControls();
-#endif
-
-#if (UNITY_EDITOR)
-            if (Input.GetMouseButton(0)) {
-                if (Input.GetAxis("Mouse X") > 0 || Input.GetAxis("Mouse X") < 0) {
-                    player.transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * playerRotationSpeed);
-                }
-            }
-#endif
-        }
-	}
-
+    /*
     private void SwipeControls() {
         for (int i = 0; i < Input.touchCount; i++) {
 
             Touch touch = Input.GetTouch(i);
 
             if (!swipeStarted && touch.phase == TouchPhase.Began) {
+                playerDegreeText.gameObject.SetActive(true);
                 swipeStarted = true;
             }
 
@@ -88,11 +92,43 @@ public class CircleBlockManager : MonoBehaviour {
                 if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) {
                     speedX = 0f;
                     swipeStarted = false;
+                    playerDegreeText.gameObject.SetActive(false);
                 }
             }
         }
 
         player.transform.Rotate(Vector3.up * speedX * playerSwipeRotationSpeed);
+    }*/
+
+    private void SetDifficultyScale() {
+        switch (DIFFICULTY_SCALE) {
+            case 0:
+                CALLOUT_INCREMENT = 10;
+                PROTRACTOR_FILL = 0.25f;
+                break;
+            case 1:
+                CALLOUT_INCREMENT = 10;
+                PROTRACTOR_FILL = 0.5f;
+                break;
+            case 2:
+                CALLOUT_INCREMENT = 10;
+                PROTRACTOR_FILL = 1f;
+                break;
+            case 3:
+                CALLOUT_INCREMENT = 5;
+                PROTRACTOR_FILL = 0.25f;
+                break;
+            case 4:
+                CALLOUT_INCREMENT = 5;
+                PROTRACTOR_FILL = 0.5f;
+                break;
+            case 5:
+                CALLOUT_INCREMENT = 5;
+                PROTRACTOR_FILL = 1f;
+                break;
+        }
+
+        protractor.fillAmount = PROTRACTOR_FILL;
     }
 
 	private void StartGame() {
@@ -115,9 +151,12 @@ public class CircleBlockManager : MonoBehaviour {
     private void InitialSetup() {
         ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
         ball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
         ball.transform.position = opponent.transform.position + (opponent.transform.forward * 0.8f);
-        bonusCoin.transform.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
+
+        bonusCoin.transform.eulerAngles = new Vector3(0, Random.Range(0, 360 * PROTRACTOR_FILL), 0);
         bonusCoin.transform.GetChild(0).gameObject.SetActive(true);
+
         player.transform.GetChild(0).GetComponent<CapsuleCollider>().enabled = true;
 
         calloutBox.SetActive(false);
@@ -127,15 +166,15 @@ public class CircleBlockManager : MonoBehaviour {
         gameStarted = false;
         ballShot = false;
 
-        swipeStarted = false;
-        speedX = 0f;
+        //swipeStarted = false;
+        //speedX = 0f;
     }
 
     private void GetRandomCall() {
-        clockwise = Random.Range(0, 2);
-        calloutDegree = 5 * Random.Range(5, 72);
+        calloutDegree = CALLOUT_INCREMENT * Random.Range(1, (int) ((360/CALLOUT_INCREMENT) * PROTRACTOR_FILL));
 
-        if (clockwise == 1) calloutDegree *= -1;
+        calloutDegree = calloutDegree - (int) opponent.transform.eulerAngles.y;
+        calloutDegree = calloutDegree - (calloutDegree % CALLOUT_INCREMENT);
 
         calloutText.text = calloutDegree.ToString() + "!";
     }
@@ -155,6 +194,8 @@ public class CircleBlockManager : MonoBehaviour {
         while (true) {
             count += 0.01f * rotationSpeed;
 
+            ballReceiver.rotation = Quaternion.Lerp(ballReceiver.rotation, Quaternion.Euler(0f, finalRotation, 0f), count);
+
             opponent.transform.Rotate(Vector3.up * calloutDegree * 0.01f * rotationSpeed);
             degreeText.text = opponent.transform.eulerAngles.y.ToString("F0");
 
@@ -173,8 +214,7 @@ public class CircleBlockManager : MonoBehaviour {
     private void CheckSuccess() {
         ball.GetComponent<Rigidbody>().AddForce(opponent.transform.forward * 30f, ForceMode.Impulse);
 
-        Debug.Log(player.transform.eulerAngles.y + " " + opponent.transform.eulerAngles.y);
-        if (Mathf.Approximately(player.transform.eulerAngles.y, opponent.transform.eulerAngles.y)) Success();
+        if ((int) player.transform.eulerAngles.y == (int)opponent.transform.eulerAngles.y) Success();
         else Failure();
 
         RestartGame();
@@ -192,10 +232,10 @@ public class CircleBlockManager : MonoBehaviour {
     }
 
     private void LockPlayerPosition() {
-        float rounding = player.transform.eulerAngles.y % 5;
+        float rounding = player.transform.eulerAngles.y % CALLOUT_INCREMENT;
 
         if (rounding < 3) player.transform.eulerAngles = new Vector3(0, player.transform.eulerAngles.y - rounding, 0);
-        else player.transform.eulerAngles = new Vector3(0, player.transform.eulerAngles.y + 5 - rounding, 0);
+        else player.transform.eulerAngles = new Vector3(0, player.transform.eulerAngles.y + CALLOUT_INCREMENT - rounding, 0);
     }
 
     private void RestartGame() {
@@ -205,8 +245,13 @@ public class CircleBlockManager : MonoBehaviour {
     private IEnumerator RestartGameCoroutine() {
         yield return Yielders.Get(1f);
 
+        SetDifficultyScale();
         InitialSetup();
         StartGame();
+    }
+
+    public void SetDifficulty(Dropdown dd) {
+        DIFFICULTY_SCALE = dd.value;
     }
 
 }

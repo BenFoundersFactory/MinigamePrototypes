@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MakeItRainManager : MonoBehaviour {
 
-    private int DIFFICULTY_SCALE = 4;
+    private int DIFFICULTY_SCALE = 0;
 
     private const int MAX_WAGE = 100000;
     private float WAGE_MULTIPLES = 0.05f;
@@ -33,8 +33,6 @@ public class MakeItRainManager : MonoBehaviour {
     [SerializeField] private Text totaliserAnswer;
     [SerializeField] private Slider totaliser;
 
-    [SerializeField] private Text difficultyText;
-
     public bool gameStarted = false;
 
     void Awake() {
@@ -46,8 +44,6 @@ public class MakeItRainManager : MonoBehaviour {
 	}
 
 	void Start () {
-        difficultyText.text = "Difficulty: " + DIFFICULTY_SCALE.ToString();
-
         SetDifficultyScale();
 
         InitialSetup();
@@ -66,25 +62,35 @@ public class MakeItRainManager : MonoBehaviour {
 
     private void SetDifficultyScale() {
         switch (DIFFICULTY_SCALE) {
+            case 0:
+                WAGE_MULTIPLES = 0.10f;
+                BONUS_MULTIPLES = 0.10f;
+                totaliserAnswer.gameObject.SetActive(true);
+                totaliser.gameObject.SetActive(true);
+                break;
             case 1:
-                WAGE_MULTIPLES = 0.2f;
-                BONUS_MULTIPLES = 0.2f;
+                WAGE_MULTIPLES = 0.05f;
+                BONUS_MULTIPLES = 0.05f;
+                totaliserAnswer.gameObject.SetActive(true);
+                totaliser.gameObject.SetActive(true);
                 break;
             case 2:
-                WAGE_MULTIPLES = 0.1f;
-                BONUS_MULTIPLES = 0.1f;
+                WAGE_MULTIPLES = 0.05f;
+                BONUS_MULTIPLES = 0.05f;
+                totaliserAnswer.gameObject.SetActive(false);
+                totaliser.gameObject.SetActive(true);
                 break;
             case 3:
                 WAGE_MULTIPLES = 0.05f;
                 BONUS_MULTIPLES = 0.05f;
+                totaliserAnswer.gameObject.SetActive(false);
+                totaliser.gameObject.SetActive(false);
                 break;
             case 4:
                 WAGE_MULTIPLES = 0.01f;
                 BONUS_MULTIPLES = 0.01f;
-                break;
-            default:
-                WAGE_MULTIPLES = 0.01f;
-                BONUS_MULTIPLES = 0.01f;
+                totaliserAnswer.gameObject.SetActive(false);
+                totaliser.gameObject.SetActive(false);
                 break;
         }
     }
@@ -101,6 +107,7 @@ public class MakeItRainManager : MonoBehaviour {
         bonus = MAX_BONUS * (BONUS_MULTIPLES * Random.Range(1, (int) (1 / BONUS_MULTIPLES + 1)));
 
         answer = (int) Mathf.Ceil(wage * bonus);
+        totaliser.value = (float)(moneyCount) / answer;
 
         wageText.text = "Wage: ???";
         bonusText.text = "Bonus: ???";
@@ -151,13 +158,7 @@ public class MakeItRainManager : MonoBehaviour {
         StartGame();
     }
 
-    public void SetDifficulty() {
-        DIFFICULTY_SCALE++;
-
-        if (DIFFICULTY_SCALE > 4) {
-            DIFFICULTY_SCALE = 1;
-        }
-
-        difficultyText.text = "Difficulty: " + DIFFICULTY_SCALE.ToString();
+    public void SetDifficulty(Dropdown dd) {
+        DIFFICULTY_SCALE = dd.value;
     }
 }

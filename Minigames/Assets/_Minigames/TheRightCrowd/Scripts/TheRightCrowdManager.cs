@@ -23,8 +23,8 @@ public class TheRightCrowdManager : MonoBehaviour {
     [SerializeField] private Text resultsText;
 
 	void Start () {
-        homeRandomRatio = new int[] { 1, 2, 3, 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        awayRandomRatio = new int[] { 3, 2, 1, 4, 3, 2, 1, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+        homeRandomRatio = new int[] { 9, 4, 7, 3, 1, 2, 3, 1, 1 };
+        awayRandomRatio = new int[] { 1, 1, 3, 2, 1, 3, 7, 4, 9 };
 
         InitialSetup();
 	}
@@ -37,15 +37,28 @@ public class TheRightCrowdManager : MonoBehaviour {
         resultsText.text = "";
         int randomNumber = Random.Range(0, homeRandomRatio.Length);
 
+        int randomRemoveCount = 10 * Random.Range(0, 4);
+
         homeRatio = homeRandomRatio[randomNumber];
         awayRatio = awayRandomRatio[randomNumber];
 
         homeRatioText.text = homeRatio.ToString();
         awayRatioText.text = awayRatio.ToString();
 
+        if (Random.Range(0, 2) == 1) {
+            homeRatioText.text += "0%";
+            awayRatioText.text += "0%";
+        }
+
         for (int i = 0; i < seats.Count; i++) {
-            seats[i].ResetColor();
-            seats[i].currentColor = -1;
+            seats[i].RandomColor();
+            seats[i].isOn = true;
+            seats[i].gameObject.SetActive(true);
+        }
+
+        for (int i = 0; i < randomRemoveCount; i++) {
+            seats[seats.Count - 1 - i].isOn = false;
+            seats[seats.Count - 1 - i].gameObject.SetActive(false);
         }
 
         submitButton.interactable = true;
@@ -55,6 +68,8 @@ public class TheRightCrowdManager : MonoBehaviour {
         submitButton.interactable = false;
 
         for (int i = 0; i < seats.Count; i++) {
+            if (!seats[i].isOn) continue;
+
             if (seats[i].currentColor == 0) homeCount++;
             else if (seats[i].currentColor == 1) awayCount++;
             else emptyCount++;
