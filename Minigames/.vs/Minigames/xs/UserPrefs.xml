@@ -1,11 +1,11 @@
 ﻿<Properties StartupConfiguration="{21E0681C-65DD-533F-4383-7B2A3AF32114}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Minigames/CircleBlock/Scripts/CircleBlockPlayer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Minigames/HeadsUp/Scripts/HeadsUpManager.cs">
     <Files>
-      <File FileName="Assets/_Minigames/HeadsUp/Scripts/HeadsUpManager.cs" Line="115" Column="29" />
-      <File FileName="Assets/_Scripts/GameManager.cs" Line="52" Column="25" />
-      <File FileName="Assets/_Minigames/CircleBlock/Scripts/CircleBlockManager.cs" Line="214" Column="26" />
-      <File FileName="Assets/_Minigames/CircleBlock/Scripts/CircleBlockPlayer.cs" Line="18" Column="34" />
+      <File FileName="Assets/_Minigames/MarkUp/Scripts/PitchPoint.cs" Line="8" Column="5" />
+      <File FileName="Assets/_Minigames/MarkUp/Scripts/MarkUpManager.cs" Line="83" Column="64" />
+      <File FileName="Assets/_Minigames/MarkUp/Scripts/MarkUpPlayer.cs" Line="25" Column="38" />
+      <File FileName="Assets/_Minigames/HeadsUp/Scripts/HeadsUpManager.cs" Line="31" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

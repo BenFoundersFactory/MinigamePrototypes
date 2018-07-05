@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class HeadsUpManager : MonoBehaviour {
 
     private const float WEAK_HEAD_UP = 7f;
+
     private const float STRONG_HEAD_UP = 12f;
 
     [SerializeField] private GameObject player;
@@ -63,7 +64,7 @@ public class HeadsUpManager : MonoBehaviour {
                 ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 ball.GetComponent<Rigidbody>().AddForce(Vector3.up * STRONG_HEAD_UP, ForceMode.Impulse);
 
-                if (target % (count + 1) == 0) {
+                if ((count + 1) % target == 0) {
                     powerFill += 0.2f;
                     multipleShowText.text = target.ToString() + "x" + (target / (count + 1)).ToString() + "!";
                 } else powerFill += 0.1f;

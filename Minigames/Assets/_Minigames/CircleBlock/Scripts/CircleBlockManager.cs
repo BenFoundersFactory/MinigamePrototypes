@@ -20,7 +20,7 @@ public class CircleBlockManager : MonoBehaviour {
     [SerializeField] private GameObject calloutBox;
     [SerializeField] private Text calloutText;
 
-    private float timer = 10f;
+    private float timer = 5f;
     private float counter = 0f;
     [SerializeField] private Image visualTimer;
 

@@ -26,7 +26,7 @@ public class MakeItRainManager : MonoBehaviour {
     private int answer;
     private int moneyCount;
 
-    private float timer = 15f;
+    private float timer = 10f;
     private float counter = 0f;
     [SerializeField] private Image visualTimer;
 
