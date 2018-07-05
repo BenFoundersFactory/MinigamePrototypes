@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour {
         score = 0;
         if (name != "ScoreScreen") {
             playingGame = true;
-            timeAndScoreCanvas.SetActive(true);
+            //timeAndScoreCanvas.SetActive(true);
             mainMenuCanvas.SetActive(false);
         }
         SceneManager.LoadScene(name);
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour {
         timer = startTime;
         score = 0;
         playingGame = false;
-        timeAndScoreCanvas.SetActive(false);
+        //timeAndScoreCanvas.SetActive(false);
         mainMenuCanvas.SetActive(true);
         SceneManager.LoadScene("MainGame");
     }

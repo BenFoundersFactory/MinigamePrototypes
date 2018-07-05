@@ -113,6 +113,7 @@ public class HeadsUpManager : MonoBehaviour {
     }
 
     private void Success() {
+        GameManager.instance.score++;
         successMessage.text = "NICE!";
         EndGame();
     }
